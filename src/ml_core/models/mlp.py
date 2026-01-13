@@ -13,13 +13,23 @@ class MLP(nn.Module):
         dropout_rate: float = 0.2,
     ):
         super().__init__()
-        
-        # TODO: Build the MLP architecture
-        # If you are up to the task, explore other architectures or model types
-        # Hint: Flatten -> [Linear -> ReLU -> Dropout] * N_layers -> Linear
-        
-        pass
+
+        self.input_dim = input_shape[0] * input_shape[1] * input_shape[2]
+        layers = []
+        in_features = self.input_dim
+
+        for hidden in hidden_units:
+            layers.append(nn.Linear(in_features, hidden))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(dropout_rate))
+            in_features = hidden
+
+        # map to num_classes (e.g., 2 for binary because we are using CrossEntropyLoss)
+        layers.append(nn.Linear(in_features, num_classes))
+
+        self.network = nn.Sequential(*layers)
+        self.flatten = nn.Flatten()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # TODO: Implement forward pass
-        pass
+        x = self.flatten(x)
+        return self.network(x)
