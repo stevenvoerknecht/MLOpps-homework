@@ -7,7 +7,7 @@ from ml_core.models import MLP
 
 # 1. Setup Configuration
 config = {
-    "data": {"data_path": "../data/pcam/", "batch_size": 32, "num_workers": 2},
+    "data": {"data_path": "/scratch-shared/scur2391/surfdrive/", "batch_size": 32, "num_workers": 2},
     "model": {"input_shape": [3, 96, 96], "hidden_units": [64, 32], "num_classes": 2},
 }
 
