@@ -1,0 +1,9 @@
+Copying data to TMPDIR...
+Data copied
+Data dir: /scratch-local/scur2391.18372796/data
+Output dir: /home/scur2391/MLOps_2026/experiments/18372796
+Training on: cuda
+Creating dataloaders...
+Dataloaders ready
+Epoch 1, Step 0, Loss: 0.6944
+Epoch 1, Step 100, Loss: 0.7147

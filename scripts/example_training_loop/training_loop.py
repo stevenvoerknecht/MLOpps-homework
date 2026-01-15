@@ -4,10 +4,20 @@ import torch.nn as nn
 import torch.optim as optim
 from ml_core.data import get_dataloaders
 from ml_core.models import MLP
+import sys
+from pathlib import Path
 
 # 1. Setup Configuration
+data_dir = sys.argv[1]
+out_dir = Path(sys.argv[2])
+
+out_dir.mkdir(parents=True, exist_ok=True)
+
+print(f"Data dir: {data_dir}", flush=True)
+print(f"Output dir: {out_dir}", flush=True)
+
 config = {
-    "data": {"data_path": "/scratch-shared/scur2391/surfdrive/", "batch_size": 32, "num_workers": 2},
+    "data": {"data_path": data_dir, "batch_size": 32, "num_workers": 2},
     "model": {"input_shape": [3, 96, 96], "hidden_units": [64, 32], "num_classes": 2},
 }
 
@@ -15,7 +25,9 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Training on: {device}")
 
 # 2. Initialize Data, Model, Optimizer
+print("Creating dataloaders...", flush=True)
 train_loader, val_loader = get_dataloaders(config)
+print("Dataloaders ready", flush=True)
 model = MLP(**config["model"]).to(device)
 optimizer = optim.SGD(model.parameters(), lr=0.001)
 criterion = nn.CrossEntropyLoss()
@@ -67,5 +79,5 @@ plt.xlabel("Epoch")
 plt.ylabel("CrossEntropy Loss")
 plt.legend()
 plt.grid(True)
-plt.savefig("pcam_learning_curves.png")
+plt.savefig(out_dir / "pcam_learning_curves.png")
 print("Training complete. Plot saved as pcam_learning_curves.png")
