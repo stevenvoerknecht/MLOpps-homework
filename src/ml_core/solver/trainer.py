@@ -22,8 +22,7 @@ class Trainer:
         self.config = config
         self.device = device
         
-        # TODO: Define Loss Function (Criterion)
-        self.criterion = None
+        self.criterion = nn.CrossEntropyLoss()
 
         # TODO: Initialize ExperimentTracker
         self.tracker = None
