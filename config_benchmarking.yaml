@@ -4,9 +4,9 @@ seed: 42
 data:
   dataset_type: "pcam"
   # TODO: download the dataset and set the relative path here
-  data_path: "./data/camelyonpatch_level_2" 
+  data_path: "/home/scur2328/MLOps/assignment_1/data/surfdrive" 
   input_shape: [3, 96, 96]
-  batch_size: 32
+  batch_size: 1
   num_workers: 2
 
 model:

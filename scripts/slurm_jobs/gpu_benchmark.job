@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --job-name=gpu_bench
+#SBATCH --output=logs/gpu_benchmark_%j.out
+#SBATCH --partition=gpu_course
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=16G
+#SBATCH --time=00:10:00
+
+cd /gpfs/home6/scur2328/MLOpps-homework
+
+module load 2025
+source venv/bin/activate
+
+python scripts/torch_example.py

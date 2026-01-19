@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --job-name=cpu_bench
+#SBATCH --output=logs/cpu_benchmark_%j.out
+#SBATCH --partition=thin_course
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --time=00:10:00
+
+cd /gpfs/home6/scur2328/MLOpps-homework
+
+module load 2025
+source venv/bin/activate
+
+python scripts/torch_example.py

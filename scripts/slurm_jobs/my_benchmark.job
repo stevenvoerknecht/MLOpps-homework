@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=pcam_cpu_bench
+#SBATCH --output=logs/bench_cpu.out
+#SBATCH --partition=thin_course
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --time=00:15:00
+
+cd /gpfs/home6/scur2328/MLOpps-homework
+module load 2025
+source venv/bin/activate
+
+python experiments/train.py --config config_benchmarking.yaml
