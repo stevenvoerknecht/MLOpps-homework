@@ -3,17 +3,17 @@ seed: 42
 
 data:
   dataset_type: "pcam"
-  data_path: "/scratch-shared/scur2391/data/camelyonpatch_level_2" 
-  input_shape: [3, 96, 96]
+  data_path: "/home/scur2391/MLOps_2026/data/surfdrive" 
   batch_size: 32
   num_workers: 2
 
 model:
+  input_shape: [3, 96, 96]
   hidden_units: [64, 32]
-  dropout_rate: 0.2
   num_classes: 2
+  dropout_rate: 0.2
 
 training:
   epochs: 5
   learning_rate: 0.001
-  save_dir: "./experiments/results"
+  save_dir: "/home/scur2391/MLOps_2026/experiments/results"

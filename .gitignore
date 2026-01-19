@@ -15,6 +15,7 @@ venv/
 experiments/results/
 
 # 4. Data and models (too large for Git)
+data/
 src/ml_core/data/
 src/ml_core/models/*.pt
 src/ml_core/models/*.ckpt

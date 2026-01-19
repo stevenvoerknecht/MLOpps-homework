@@ -1,11 +1,13 @@
+import sys
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from ml_core.data import get_dataloaders
 from ml_core.models import MLP
-import sys
-from pathlib import Path
+
 # Je kan alle time dingen uncommenten als je wil testen hoe lang het runnen duurt
 # import time
 # from time import perf_counter
@@ -23,7 +25,7 @@ print(f"Output dir: {out_dir}", flush=True)
 # t0 = perf_counter()
 
 config = {
-    "data": {"data_path": data_dir, "batch_size": 32, "num_workers": 2},
+    "data": {"data_path": data_dir, "batch_size": 32, "num_workers": 8},
     "model": {"input_shape": [3, 96, 96], "hidden_units": [64, 32], "num_classes": 2},
 }
 
@@ -47,7 +49,7 @@ criterion = nn.CrossEntropyLoss()
 train_losses = []
 val_losses = []
 
-for epoch in range(10):
+for epoch in range(3):
     model.train()
     epoch_train_loss = 0
 
