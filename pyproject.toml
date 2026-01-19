@@ -23,6 +23,8 @@ dependencies = [
     "tqdm",
     "pyyaml",
     "python-dotenv",
+    "scikit-learn",
+    "pathlib",
     # Dev tools
     "pytest",
     "ruff",

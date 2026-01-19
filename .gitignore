@@ -1,6 +1,9 @@
 # 1. Python cache and metadata
 __pycache__/
 *.pyc
+experiments/logs/
+experiments/results/
+.env
 .DS_Store
 *.egg-info/
 
@@ -12,6 +15,7 @@ venv/
 experiments/results/
 
 # 4. Data and models (too large for Git)
+data/
 src/ml_core/data/
 src/ml_core/models/*.pt
 src/ml_core/models/*.ckpt

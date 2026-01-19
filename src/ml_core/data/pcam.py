@@ -4,6 +4,9 @@ import h5py
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+# Je kan alle time dingen uncommenten als je wil testen hoe lang het runnen duurt
+# import time
+# from time import perf_counter
 
 
 class PCAMDataset(Dataset):
@@ -34,6 +37,10 @@ class PCAMDataset(Dataset):
         return len(self.indices)
 
     def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        # Test voor de timing die je kan doen
+        # start_item = perf_counter()
+        # print("get item started")
+
         real_idx = self.indices[idx]
         img = self.x_data[real_idx]
         label = self.y_data[real_idx].item()
@@ -50,5 +57,9 @@ class PCAMDataset(Dataset):
         else:
             # Basic conversion if no transform provided
             img = torch.from_numpy(img).permute(2, 0, 1).float()
+        
+        # Test voor timing die je kan doen
+        # end_item = perf_counter()
+        # print(f"[TIMING] Time to get one item is {end_item-start_item}")
 
         return img, torch.tensor(label, dtype=torch.long)

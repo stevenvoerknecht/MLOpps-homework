@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --gpus-per-task=1
+#SBATCH --mem=16G
+#SBATCH --partition=gpu_course
+#SBATCH --time=00:30:00
+#SBATCH --output=job_%j.out
+#SBATCH --error=job_%j.err
+# Set output directory to /scratch-shared/<user>/data
+INPUT_DIR="/home/scur2391/data/surfdrive" 
+# Activate environment
+source $HOME/venv/bin/activate
+# Making an output directory
+OUT_DIR="$HOME/MLOps_2026/experiments/runs/$SLURM_JOB_ID"
+mkdir -p "$OUT_DIR"
+# Execute program located in $HOME, using the environment
+# This program might write the pre-processed data to the output dir
+python -u $HOME/MLOps_2026/scripts/example_training_loop/training_loop.py "$INPUT_DIR" "$OUT_DIR"  
