@@ -3,8 +3,8 @@ seed: 42
 
 data:
   dataset_type: "pcam"
-  data_path: "/home/scur2391/MLOps_2026/data/surfdrive" 
-  batch_size: 32
+  data_path: "/home/scur2160/MLOpps-homework/data/mlops_2026_pcam_data/surfdrive" 
+  batch_size: 16
   num_workers: 2
 
 model:
@@ -16,4 +16,4 @@ model:
 training:
   epochs: 5
   learning_rate: 0.001
-  save_dir: "/home/scur2391/MLOps_2026/experiments/results"
+  save_dir: "/home/scur2160/MLOpps-homework/experiments/results"

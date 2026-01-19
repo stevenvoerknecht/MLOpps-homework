@@ -19,10 +19,13 @@ class Trainer:
         self.optimizer = optimizer
         self.config = config
         self.device = device
-
         self.criterion = nn.CrossEntropyLoss()
 
         # TODO: Initialize ExperimentTracker
+        self.scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.7)
+        self.grad_norms = []
+        self.lrs = []
+
         self.tracker = None
 
         # TODO: Initialize metric calculation (like accuracy/f1-score) if needed
@@ -47,6 +50,11 @@ class Trainer:
 
             # 4. Backward pass, Optimizer step
             loss.backward()
+            
+            # Gradient clipping and tracking
+            grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=2.0)
+            self.grad_norms.append(grad_norm.item())
+            
             self.optimizer.step()
 
             # 5. Track metrics (Loss, Accuracy, F1)
@@ -127,6 +135,12 @@ class Trainer:
             val_metrics = self.validate(val_loader, epoch)
 
             # TODO: Log metrics to tracker
+            
+            # Step the scheduler and log LR
+            self.scheduler.step()
+            current_lr = self.scheduler.get_last_lr()[0]
+            self.lrs.append(current_lr)
+            print(f"--> [INFO] Epoch {epoch+1} klaar. Nieuwe Learning rate is: {current_lr:.6f}")
 
             # Save checkpoints
             self.save_checkpoint(epoch, val_metrics[0])
@@ -134,6 +148,3 @@ class Trainer:
             print(
                 f"Training loss is {train_metrics[0]} and Validation loss is {val_metrics[0]}"
             )
-
-
-# Remember to handle the trackers properly

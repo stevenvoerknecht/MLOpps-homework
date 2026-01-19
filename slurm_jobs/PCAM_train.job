@@ -12,9 +12,12 @@
 module load 2025
 module load Python/3.13.1-GCCcore-14.2.0
 # Activate environment
-source $HOME/MLOps_2026/venv/bin/activate
+source $HOME/MLOpps-homework/venv/bin/activate
 # Set CuBLAS deterministic flag
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 # Execute program located in $HOME, using the environment
 # This program might write the pre-processed data to the output dir
-python -u $HOME/MLOps_2026/experiments/train.py --config $HOME/MLOps_2026/experiments/configs/train_config.yaml
+python -u $HOME/MLOpps-homework/experiments/train.py --config $HOME/MLOpps-homework/experiments/configs/train_config.yaml
+module load 2025
+module load Python/3.13.1-GCCcore-14.2.0
+
