@@ -47,7 +47,7 @@ criterion = nn.CrossEntropyLoss()
 train_losses = []
 val_losses = []
 
-for epoch in range(3):
+for epoch in range(10):
     model.train()
     epoch_train_loss = 0
 

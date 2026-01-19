@@ -8,22 +8,13 @@
 #SBATCH --time=00:10:00
 #SBATCH --output=job_%j.out
 #SBATCH --error=job_%j.err
-#Load environment modules
-module load 2025
-module load Python/3.13.1-GCCcore-14.2.0
-module load matplotlib/3.10.3-gfbf-2025a
 # Set output directory to /scratch-shared/<user>/data
-INPUT_DIR="/scratch-shared/${USER}/data"
+INPUT_DIR="/home/scur2391/data/surfdrive" 
 # Activate environment
 source $HOME/venv/bin/activate
-# Copying the data from scratch-shared to local SSD node to make hdf5 faster
-echo "Copying data to TMPDIR..."
-cp -r /scratch-shared/$USER/data $TMPDIR/data
-DATA_DIR="$TMPDIR/data"
-echo "Data copied"
 # Making an output directory
-OUT_DIR="$HOME/MLOps_2026/experiments/$SLURM_JOB_ID"
+OUT_DIR="$HOME/MLOps_2026/experiments/runs/$SLURM_JOB_ID"
 mkdir -p "$OUT_DIR"
 # Execute program located in $HOME, using the environment
 # This program might write the pre-processed data to the output dir
-python -u $HOME/MLOps_2026/scripts/example_training_loop/training_loop.py "$DATA_DIR" "$OUT_DIR"  
+python -u $HOME/MLOps_2026/scripts/example_training_loop/training_loop.py "$INPUT_DIR" "$OUT_DIR"  
