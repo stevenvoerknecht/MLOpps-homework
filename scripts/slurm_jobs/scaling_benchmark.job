@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --job-name=scaling_bench
+#SBATCH --output=logs/scaling_%A_%a.out
+#SBATCH --partition=gpu_course
+#SBATCH --gres=gpu:1
+#SBATCH --array=8,16,32,128,256,512
+#SBATCH --mem=16G
+#SBATCH --time=00:10:00
+
+cd /gpfs/home6/scur2328/MLOpps-homework
+module load 2025
+source venv/bin/activate
+
+python scripts/torch_example.py
