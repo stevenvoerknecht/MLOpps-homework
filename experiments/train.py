@@ -1,4 +1,6 @@
 import argparse
+import os
+from pathlib import Path
 
 import torch
 import torch.optim as optim
@@ -13,6 +15,12 @@ logger = setup_logger("Experiment_Runner")
 def main(args):
     # 1. Load Config & Set Seed
     config = load_config(args.config)
+
+    # setting the correct datapath
+    project_root = Path(os.environ["PROJECT_ROOT"])
+    data_path = project_root / config["data"]["data_path"]
+    config["data"]["data_path"] = str(data_path)
+
     name = config["experiment_name"]
     seed = config["seed"]
     model_config = config["model"]

@@ -1,4 +1,5 @@
 import logging
+import os
 import random
 from typing import Any, Dict
 
@@ -24,7 +25,19 @@ def setup_logger(name: str = "MLOps_Course") -> logging.Logger:
 def load_config(path: str) -> Dict[str, Any]:
     """Safely loads a yaml configuration file."""
     with open(path, "r") as f:
-        return yaml.safe_load(f)
+        config = yaml.safe_load(f)
+
+        def expand(value):
+            if isinstance(value, str):
+                return os.path.expandvars(value)
+            return value
+
+        for section in config.values():
+            if isinstance(section, dict):
+                for k, v in section.items():
+                    section[k] = expand(v)
+
+    return config
 
 
 def seed_everything(seed: int):

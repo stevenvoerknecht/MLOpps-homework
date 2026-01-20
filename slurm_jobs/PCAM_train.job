@@ -6,13 +6,18 @@
 #SBATCH --mem=16G
 #SBATCH --partition=gpu_course
 #SBATCH --time=00:30:00
-#SBATCH --output=job_%j.out
-#SBATCH --error=job_%j.err
+#SBATCH --output=slurm_jobs/job_outputs/job_%j.out
+#SBATCH --error=slurm_jobs/job_outputs/job_%j.err
+# Setting the project root
+set -e
+PROJECT_ROOT="$SLURM_SUBMIT_DIR"
+export PROJECT_ROOT
+echo "PROJECT_ROOT is: $PROJECT_ROOT"
 # Load Python module
 module load 2025
 module load Python/3.13.1-GCCcore-14.2.0
 # Activate environment
-source $HOME/MLOps_2026/venv/bin/activate
+source "$PROJECT_ROOT/venv/bin/activate"
 # Set CuBLAS deterministic flag
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 # Execute program located in $HOME, using the environment
