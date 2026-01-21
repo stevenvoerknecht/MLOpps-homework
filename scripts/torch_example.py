@@ -80,6 +80,7 @@ optimizer = Adam(model.parameters(), lr=0.001)
 criterion = nn.BCELoss()
 
 loss_list = []
+epochs = 10
 
 for _ in range(epochs):
     for x, y in train_loader:
