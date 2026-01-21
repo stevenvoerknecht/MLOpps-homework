@@ -3,7 +3,7 @@
 
 ## Group Information
 * **Group Number:** 4
-* **Team Members:** [Steven Voerknecht, 14666928; Member 2 Name/ID, Member 3 Name/ID, Member 4 Name/ID, Member 5 Name/ID]
+* **Team Members:** Steven Voerknecht, 14666928; Member 2 Name/ID, Member 3 Name/ID, Member 4 Name/ID, Member 5 Name/ID
 * **GitHub Repository:** [Link naar onze Git repository](https://github.com/stevenvoerknecht/MLOpps-homework)
 * **Base Setup Chosen from Assignment 1:** De Setup gegeven in de mail
 
@@ -224,9 +224,9 @@ We hebben gezien dat de GPU een throughput van 253.402 img/s heeft. Dit is extre
 ---
 
 ## Question 9: Documentation & README
-1. **README Link:** You can find the README in MLOps_2026/README.md
-2. **README Sections:** Running the installation, data setup, training and inference on a fresh node gives the expected outputs.
-3. **Offline Handover:** To run the model offline you need the dataset, the best checkpoint.pt file and the entire python code repository, a venv with the correct dependencies installed, the config file and the slurm job on a USB stick
+1. **README Link:** Je kan de README.md vinden in MLOps_2026/README.md of via: [Devlink to README.md](https://vscode.dev/github/stevenvoerknecht/MLOpps-homework/blob/dev/README.md)
+2. **README Sections:** Het runnen van de installatie, data setup, training en inference op een nieuwe node levert de verwachte resultaten op.
+3. **Offline Handover:** Om het model offline uit te voeren, heb je de dataset, het beste checkpoint.pt-bestand en de volledige Python-code repository nodig, een venv met de juiste dependencies geïnstalleerd, het config.yaml bestand en de slurm jobscript op een USB-stick.
 
 ---
 
