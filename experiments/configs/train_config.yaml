@@ -17,3 +17,10 @@ training:
   epochs: 8
   learning_rate: 0.001
   save_dir: "experiments/results"
+
+optimizer: "adam"
+  scheduler:
+    name: "reduce_lr_on_plateau"
+    factor: 0.1
+    patience: 2
+  
