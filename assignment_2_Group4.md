@@ -101,7 +101,7 @@
 ## Question 7: Team Collaboration and CI/CD
 1. **Consolidation Strategy:** 
 2. **Collaborative Flow:**
-
+test voor pull
 3. **CI Audit:**
 
 4. **Merge Conflict Resolution:**
