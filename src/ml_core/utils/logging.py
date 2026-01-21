@@ -40,6 +40,16 @@ def load_config(path: str) -> Dict[str, Any]:
     return config
 
 
+def load_checkpoint(path, model, optimizer, device):
+    checkpoint = torch.load(path, map_location=device)
+
+    model.load_state_dict(checkpoint["model_state"])
+    optimizer.load_state_dict(checkpoint["optimizer_state"])
+
+    start_epoch = checkpoint["epoch"] + 1
+    return start_epoch, checkpoint
+
+
 def seed_everything(seed: int):
     """Ensures reproducibility across numpy, random, and torch."""
     random.seed(seed)

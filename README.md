@@ -42,7 +42,31 @@ python experiments/train.py --config experiments/configs/train_config.yaml
 ```
 
 ---
+### Dataset storage
+It is trivial to have the dataset at a specific place in the structure so that config.yaml and PCAM_train.job work properly. The dataset cannot be places on scratch-shared because this does not work properly, place the dataset in the MLOps_2026 folder on a folder named data/ and inside that folder have a folder called surfdrive/ which contains the .h5 files. 
 
+### Training configuration
+The training configuration can be found in experiments/configs/ and can be changed to change hyperparameters.
+
+### Training
+To train the model run the following command from the MLOps_2026 folder (not the slurm_jobs folder):  
+```python
+sbatch slurm_jobs/PCAM_train.job
+```
+
+### Checkpoints
+Checkpoints are save in experiments/results and the best checkpoint can be found in experiments/. 
+
+### Inference
+You can run an inference for a single sample using inference.py.  
+Run the following command from the folder MLOps_2026 to run inference.py:  
+```python
+python experiments/inference.py \
+  --config experiments/configs/train_config.yaml \
+  --checkpoint experiments/checkpoint_epoch_7.pt \
+  --h5_x data/surfdrive/camelyonpatch_level_2_split_test_x.h5 \
+  --index 0
+``` 
 ## 📂 Project Structure
 
 ```text
@@ -56,6 +80,9 @@ python experiments/train.py --config experiments/configs/train_config.yaml
 │   ├── configs/          # YAML files for hyperparameters
 │   ├── results/          # Checkpoints and logs (Auto-generated)
 │   └── train.py          # Entry point for training
+├── slurm_jobs/           # slurm jobs that can be run on snellius
+├── data/                 # The data directory
+│   └── surfdrive/        # Folder with actual .h5 files
 ├── scripts/              # Helper scripts (plotting, etc)
 ├── tests/                # Unit tests for QA
 ├── pyproject.toml        # Config for Tools (Ruff, Pytest)

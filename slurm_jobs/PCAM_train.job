@@ -22,4 +22,4 @@ source "$PROJECT_ROOT/venv/bin/activate"
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 # Execute program located in $HOME, using the environment
 # This program might write the pre-processed data to the output dir
-python -u $PROJECT_ROOT/experiments/train.py --config $PROJECT_ROOT/experiments/configs/train_config.yaml
+python -u $PROJECT_ROOT/experiments/train.py --config $PROJECT_ROOT/experiments/configs/train_config.yaml --resume_from $PROJECT_ROOT/experiments/checkpoint_epoch_7.pt

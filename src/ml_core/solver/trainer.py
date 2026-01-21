@@ -115,12 +115,14 @@ class Trainer:
         checkpoint_path = save_dir / f"checkpoint_epoch_{epoch}.pt"
         torch.save(checkpoint, checkpoint_path)
 
-    def fit(self, train_loader: DataLoader, val_loader: DataLoader) -> None:
+    def fit(
+        self, train_loader: DataLoader, val_loader: DataLoader, start_epoch=0
+    ) -> None:
         epochs = self.config["training"]["epochs"]
 
         print(f"Starting training for {epochs} epochs...")
 
-        for epoch in range(epochs):
+        for epoch in range(start_epoch, epochs):
             # Call train_epoch and validate
             print(f"Epoch {epoch+1} has started")
             train_metrics = self.train_epoch(train_loader, epoch)

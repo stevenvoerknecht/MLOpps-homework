@@ -2,52 +2,98 @@
 **MLOps & ML Programming (2026)**
 
 ## Group Information
-* **Group Number:** [Your Group Number]
-* **Team Members:** [Member 1 Name/ID, Member 2 Name/ID, Member 3 Name/ID, Member 4 Name/ID, Member 5 Name/ID]
-* **GitHub Repository:** [Link to your Group Repository]
-* **Base Setup Chosen from Assignment 1:** [Name of the group member whose repo was used as the foundation]
+* **Group Number:** 4
+* **Team Members:** [Steven Voerknecht, 14666928; Member 2 Name/ID, Member 3 Name/ID, Member 4 Name/ID, Member 5 Name/ID]
+* **GitHub Repository:** [Link naar onze Git repository](https://github.com/stevenvoerknecht/MLOpps-homework)
+* **Base Setup Chosen from Assignment 1:** De Setup gegeven in de mail
 
 ---
 
 ## Question 1: Reproducibility Audit
-1. **Sources of Non-Determinism:**
+1. **Sources of Non-Determinism:**   
+Er zijn een aantal bronnen van non-determinisme in onze code.  
+Ten eerste zijn er aantal plekken waar random functies worden aangeroepen door random, numpy en pytorch. Berekeningen die door PyTorch worden gedaan zijn uit zichzelf willekeurig, dus moeten deterministisch worden gemaakt om voorspelbaar te zijn.  
+Ten tweede worden er door de dataloader workers gebruikt. Zodra er meerdere workers worden gebruikt kan dit ervoor zorgen dat dingen random uitkomsten hebben. Ook wordt een geseede generator gebruikt voor de dataloader zodat het loaden van data voorspelbaar gebeurt.  
+Ten derde kunnen er verschillen plaatsvinden in de code door het gebruiken van een net andere dataset.  
+Ten vierde kan er non-determinisme plaatsvinden vanwege kleine gebreken in de hardware.  
+Ten vijfde kan er non-determinisme plaatsvinden als er verschillende versies van libraries worden gebruikt. 
 
-2. **Control Measures:**
+
+2. **Control Measures:**  
+Ten eerste worden alle random functies geseed voordat ze verder in de code worden gebruikt in de functie seed_everyting.  
+Ten tweede worden de workers in de dataloader geseed en wordt er een generator aangemaakt voor de dataloader in get_dataloaders.  
+Ten derde worden er geen veranderingen aangebracht aan de dataset in onze code waardoor dit tot geen problemen leidt.  
+Het vierde punt van hardware is moeilijk op te lossen dus hier zijn geen aanpassingen in de code.  
+Het gebruiken van dezelfde libraries wordt gedeeltelijk vastgesteld in de slurm-job en pyproject.toml. Voor een groot deel van de library wordt simpelweg de meest recente versie gebruikt, dus dit kan voor veranderingen zorgen als er een nieuwe versie uitkomt. Dit is echter niet zo'n gigantisch probleem omdat dit niet heel vaak gebeurt. 
 
 3. **Code Snippets for Reproducibility:**
    ```python
-   # Paste the exact code added for seeding and determinism
+   def seed_worker(worker_id):
+      # seed every worker for reproducibility
+      worker_seed = seed + worker_id
+      np.random.seed(worker_seed)
+      random.seed(worker_seed)
+   ```
+   ```python
+   g = torch.Generator()
+   g.manual_seed(seed)
+   ```
+   ```python
+   def seed_everything(seed: int):
+      """Ensures reproducibility across numpy, random, and torch."""
+      random.seed(seed)
+      np.random.seed(seed)
+      torch.manual_seed(seed)
+      torch.cuda.manual_seed(seed)
+      torch.cuda.manual_seed_all(seed)
+
+      # Using deterministic execution
+      torch.backends.cudnn.deterministic = True
+      torch.backends.cudnn.benchmark = False
+      torch.use_deterministic_algorithms(True)
    ```
 
-4. **Twin Run Results:**
+4. **Twin Run Results:**   
+Na het runnen van dezelfde code op 2 verschillende computers verschilde de uitkomst van zowel de train als de validation loss nog steeds. Wij vermoeden dat dit komt doordat ze op verschillende gpu nodes waren gerund en deze net andere hardware hadden. 
 
 ---
 
 ## Question 2: Data, Partitioning, and Leakage Audit
-1. **Partitioning Strategy:**
+1. **Partitioning Strategy:**  
+We hebben de train/validation split gebruikt die al voorgegeven was in de dataset. Dit kan er misschien voor zorgen dat er moeilijker validation accuracy wordt verkregen, maar zelf hersplitten kan leiden dat dataleakage. Vandaar dat we deze hebben gebruikt. Er wordt wel een shuffler (met sampler) gebruikt bij de aparte train- en validation loader.  
+De uiteindelijke verhouding was ~17,2% validation en ~82,8% training set. 
 
-2. **Leakage Prevention:**
+2. **Leakage Prevention:**  
+De eerste vorm van data leakage prevention is dat we niet hebben gere-split omdat dit ervoor kan zorgen dat dezelfde datapunten of datapunten van dezelfde patienten voor kunnen komen in dezelfde dataset en dat kan leiden dat data leakage. Ook het berekenen van statistieken over de dataset gebeurt los tussen de train en validation set en alleen de resultaten van de validation set worden gebruikt om representatief te zijn. Verder gebeurt het pre-processen van data alleen in de dataloader bij __get_item__ van de PCAMDataset class. 
    
-3. **Cross-Validation Reflection:**
+3. **Cross-Validation Reflection:**  
+nested k-fold cross validation is hier niet nodig omdat er al een goede split is gegeven in de data die werkt en data leakage voorkomt. Dat hersplitten voegt niks toe en is risicovol. Ook is k-fold cross validation computationeel ongelooflijk duur en dus onpraktisch. Het gebruiken van de metrics die berekent zijn op de validation set is voldoende om hyperparamaters te tunen. 
 
-4. **The Dataset Size Mystery:**
+4. **The Dataset Size Mystery:**  
+De dataset was veel groter omdat de pixels in uint32 waren gegeven terwijl je aan uint8 al voldoende hebt. Hierdoor heb je veel meer bytes nodig om de plaatjes weer te geven. Dit is makkelijk op te lossen door de dataset naar uint8 te casten. 
 
-5. **Poisoning Analysis:**
+5. **Poisoning Analysis:**  
+Er zijn verschillende vormen van data poisining. Een aantal opties zijn label poisining (verkeerde labels), Backdoor poisining (iets kleins toegevoegd aan de pixels waaraan het model het correcte label kan voorspellen), Datadistribution poisining (verschillende distributie tussen train en validation) en data representation poisining (data opgeslagen met verkeerde datatype). Ik vermoede data representation poisining omdat pixels normaal tussen de 0 en 255 moeten liggen voor de verschillende kleuren, maar deze pixels hadden een veel grotere range en een veel hoger gemiddelde. Dit kwam dus omdat ze in uint32 stonden. Na het runnen van print(images.dtype) was dit vermoeden bevestigd. 
 
 ---
 
 ## Question 3: Configuration Management
-1. **Centralized Parameters:**
+1. **Centralized Parameters:**  
+De paths naar bijvoorbeeld de dataset of de output directory kunnen niet gehardcode worden omdat je groepsgenoten ze dan niet kunnen gebruiken, ook heel veel model parameters wil je niet hardcoden. Een aantal voorbeelden daarvan zijn het aantal epochs, de learning rate, de dropout rate of het de hidden layer size. Ook seeds wil je kunnen aanpassen en moeten centraal kunnen veranderen. Je wil ook dingen aan het runnen van het model kunnen aanpassen zoals het gebruik van gpu of cpu, het werkgeheugen, het aantal workers of de batchsize. 
 
 2. **Loading Mechanism:**
-   - [Describe your use of YAML, Hydra, or Argparse.]
+   - Deze parameters kunnen worden aangepast in het config.yaml of in het slurm jobscript om verschillende parameters te testen. 
    ```python
-   # Snippet showing how parameters are loaded
+   parser = argparse.ArgumentParser(description="Train a Simple MLP on PCAM")
+   parser.add_argument("--config", type=str, required=True, help="Path to config yaml")
+   args = parser.parse_args()
    ```
 
-3. **Impact Analysis:**
+3. **Impact Analysis:**  
+Het centraal stellen van deze parameters en vooral het centrale seeden zorgt voor enorm voorspelbare uitkomsten. Hiermee kan je ook makkelijker experimenten vergelijken omdat alle groepsleden hetzelfde config.yaml en jobscript bestandje kunnen gebruiken voor het runnen. Samenwerken werd daardoor ook veel makkelijker. Voordat alles centraal was moesten groepsleden telkens een nieuwe config.yaml en jobscript bestandje schrijven voor hun tests. 
 
-4. **Remaining Risks:** 
+4. **Remaining Risks:**  
+Een huidig risico dat we hebben is dat de relatieve paths naar de dataset en de ouput directory alleen werken als de dataset op de juiste plek in de structuur van de folders staat. Als de dataset niet in een apart mapje in de MLOps_2026 map staat onder de naam data/surfdrive werkt de code niet meer voor iedereen. Ook moet het jobscript gerund worden vanuit de MLOps_2026 folder en niet de MLOps_2026/slurm_jobs folder want dan werkt ${PROJECT_ROOT} niet correct. 
 
 ---
 
@@ -99,7 +145,9 @@
 ---
 
 ## Question 7: Team Collaboration and CI/CD
-1. **Consolidation Strategy:** 
+1. **Consolidation Strategy:**  
+We hebben de codebase van het MLOps-team als basis gebruikt, omdat niemand van ons opdracht 1 had voltooid. We hebben dit gedaan door ‘git remote add other <url>’ uit te voeren, te fetchen, samen te voegen en een paar samenvoegingsproblemen handmatig op te lossen. Dit werkte omdat we al een licht bewerkte MLOps_2026-repo in de github-repository hadden. 
+
 2. **Collaborative Flow:**
 
 3. **CI Audit:**
@@ -176,9 +224,9 @@ We hebben gezien dat de GPU een throughput van 253.402 img/s heeft. Dit is extre
 ---
 
 ## Question 9: Documentation & README
-1. **README Link:** [Link to your Group Repo README]
-2. **README Sections:** [Confirm Installation, Data Setup, Training, and Inference are present.]
-3. **Offline Handover:** [List the files required on a USB stick to run the model offline.]
+1. **README Link:** You can find the README in MLOps_2026/README.md
+2. **README Sections:** Running the installation, data setup, training and inference on a fresh node gives the expected outputs.
+3. **Offline Handover:** To run the model offline you need the dataset, the best checkpoint.pt file and the entire python code repository, a venv with the correct dependencies installed, the config file and the slurm job on a USB stick
 
 ---
 
