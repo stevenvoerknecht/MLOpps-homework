@@ -1,0 +1,4 @@
+Starting benchmark on cuda...
+Total time for 1000 iterations: 0.1470 seconds
+Throughput: 6804.23 img/s
+GPU Name: NVIDIA A100-SXM4-40GB MIG 1g.5gb

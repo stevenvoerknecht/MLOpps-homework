@@ -12,7 +12,7 @@ from .pcam import PCAMDataset
 
 def get_dataloaders(config: Dict) -> Tuple[DataLoader, DataLoader]:
     data_cfg = config["data"]
-    seed = config["seed"]
+    seed = config.get("seed", 42)
     base_path = Path(data_cfg["data_path"])
 
     def create_loader(split: str, use_sampler: bool = False):

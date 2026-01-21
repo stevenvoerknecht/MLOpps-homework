@@ -1,0 +1,17 @@
+Starting benchmark on cuda...
+Traceback (most recent call last):
+  File "/gpfs/home6/scur2328/MLOpps-homework/scripts/torch_example.py", line 20, in <module>
+    _ = model(dummy_input)
+  File "/gpfs/home6/scur2328/MLOpps-homework/venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/gpfs/home6/scur2328/MLOpps-homework/venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/gpfs/home6/scur2328/MLOpps-homework/venv/lib64/python3.9/site-packages/torch/nn/modules/container.py", line 250, in forward
+    input = module(input)
+  File "/gpfs/home6/scur2328/MLOpps-homework/venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/gpfs/home6/scur2328/MLOpps-homework/venv/lib64/python3.9/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/gpfs/home6/scur2328/MLOpps-homework/venv/lib64/python3.9/site-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu! (when checking argument for argument mat1 in method wrapper_CUDA_addmm)
