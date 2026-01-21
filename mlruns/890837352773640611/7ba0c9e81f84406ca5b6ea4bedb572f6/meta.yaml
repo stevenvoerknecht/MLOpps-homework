@@ -1,0 +1,14 @@
+artifact_uri: file:///gpfs/home3/scur2378/MLOpps-homework/mlruns/890837352773640611/7ba0c9e81f84406ca5b6ea4bedb572f6/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '890837352773640611'
+lifecycle_stage: active
+run_id: 7ba0c9e81f84406ca5b6ea4bedb572f6
+run_name: capable-auk-759
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1768952891338
+status: 1
+tags: []
+user_id: scur2378

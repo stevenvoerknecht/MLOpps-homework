@@ -12,6 +12,8 @@
 set -e
 PROJECT_ROOT="$SLURM_SUBMIT_DIR"
 export PROJECT_ROOT
+# Add src to Python path
+export PYTHONPATH=$PROJECT_ROOT/src:$PYTHONPATH
 echo "PROJECT_ROOT is: $PROJECT_ROOT"
 # Load Python module
 module load 2025

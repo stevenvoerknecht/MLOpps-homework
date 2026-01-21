@@ -1,0 +1,14 @@
+artifact_uri: file:///gpfs/home3/scur2378/MLOpps-homework/mlruns/890837352773640611/cfc43e9eeed44f779b25ec61ad97eec7/artifacts
+end_time: 1768952738021
+entry_point_name: ''
+experiment_id: '890837352773640611'
+lifecycle_stage: active
+run_id: cfc43e9eeed44f779b25ec61ad97eec7
+run_name: aged-skink-281
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1768952736480
+status: 3
+tags: []
+user_id: scur2378
