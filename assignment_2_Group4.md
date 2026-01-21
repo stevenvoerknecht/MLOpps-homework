@@ -3,7 +3,7 @@
 
 ## Group Information
 * **Group Number:** 4
-* **Team Members:** Steven Voerknecht, 14666928; Member 2 Name/ID, Member 3 Name/ID, Member 4 Name/ID, Member 5 Name/ID
+* **Team Members:** Steven Voerknecht, 14666928; Max van Aerssen; 15230015, Elia Loeb, Member 4 Name/ID, Member 5 Name/ID
 * **GitHub Repository:** [Link naar onze Git repository](https://github.com/stevenvoerknecht/MLOpps-homework)
 * **Base Setup Chosen from Assignment 1:** De Setup gegeven in de mail
 
