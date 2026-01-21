@@ -101,12 +101,30 @@
 ## Question 7: Team Collaboration and CI/CD
 1. **Consolidation Strategy:** 
 2. **Collaborative Flow:**
-test voor pull
-3. **CI Audit:**
 
+3. **CI Audit:**
+de standaard GPU-enabled install op de github runner zou ervoor zorgen dat de install enorm veel tijd kost en deze zou waarschijnlijk de opslag van de github runner overschrijden.
+
+Door de CI worden er een aantal pytests uitgevoerd en wanneer ide niet slagen wordt de merge geblokkeerd. hierdoor wordt er dus niet gemerged wanneer belangrijke architectuur door een teamgenoot wordt aangepast.
 4. **Merge Conflict Resolution:**
 
 5. **Branching Discipline:**
+* cbd3ac6 example.py fix
+* defa664 pull fix
+* dcd6225 pull test
+* 28824ee (origin/dev, dev) Assignment 8 in dev
+* 960e23e Adding a few new changes to the slurm job
+* 5c92e68 Changing the configuration and jobscript so everyone can use the same one
+* c98ebf7 removed a run result
+* fd35682 Finishin trainer.py and train.py and seeding everythin
+* f8d310a (origin/trainer) The first run with 3 epochs
+* 6771ef7 (origin/Stevens_assignment1) Adding a working jobscript
+* 05e219d first testrun with the dataset
+* 74c733c changing the path to the dataset (in scratch-shared)
+* d257129 slight change to .gitignore
+| * 822428c (origin/feature/throughput-benchmarking, feature/throughput-benchmarking) Vraag 8 toegevoegd aan md
+
+onze geschiedenis is non-linear. Dit is voor ons op dit moment gewenst omdat we allemaal apart en tegelijkertijd aan onze opdrachten willen werken en het later met elkaar samen willen voegen.
 
 ---
 
