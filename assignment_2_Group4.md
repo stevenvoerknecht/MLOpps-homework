@@ -99,10 +99,15 @@ Een huidig risico dat we hebben is dat de relatieve paths naar de dataset en de 
 
 ## Question 4: Gradients & LR Scheduler
 1. **Internal Dynamics:**
+Granularity: Gradients moet je per stap (batch) plotten. Als je per epoch plot, middel je alle ruis weg. Juist die ruis is belangrijk, want dat laat zien hoe het model reageert op verschillende batches data.
+
+Spikes: Grote pieken in de gradient betekenen instabiliteit. Meestal komt dat door een 'slechte batch' (bijv. rare data of outliers), waardoor het model in één klap een enorme correctie wil doen.
 
 2. **Learning Rate Scheduling:**
+Ik gebruik ReduceLROnPlateau omdat in de documentatie staat dat deze scheduler de rate aanpast op basis van "validation measurements". Dat vind ik slimmer dan een vaste scheduler. ReduceLROnPlateau wacht namelijk tot het model niet meer verbetert en grijpt dan pas in.
+Aan het einde van de training verlagen we want dan zit je dicht bij het minimum. Als de learning rate dan te hoog blijft, ga je steeds over het doel heen. Door te verlagen maak je de stapjes kleiner en kan het model netjes in het juiste punt landen.
 
----
+De plot was helaas niet gelukt omdat er door het aanpassen van config bestand en wat technische fouten en queues de epochs niet afgemaakt konden worden. Het model werkt verder wel want we konden ook de validation en training error zien en vergelijken. 
 
 ## Question 5: Part 1 - Experiment Tracking
 1. **Metrics Choice:**
