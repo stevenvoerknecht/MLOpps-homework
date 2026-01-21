@@ -232,10 +232,44 @@ Dit toont het duidelijke voordeel van systematisch MLOps hyperparameter search o
 
 ## Question 6: Model Slicing & Error Analysis
 1. **Visual Error Patterns:**
+Zie `experiments/results/slice_metrics_plot.png` voor een visuele vergelijking van globale vs slice metrics.
+  
+Global Performance
+- Accuracy : 0.6631  
+- Precision: 0.6185  
+- Recall   : 0.8493  
+- F1-score : 0.7158  
 
-2. **The "Slice":**
+Slice Performance (Low-confidence tiles)
+- Accuracy : 0.8839  
+- Precision: 0.0000  
+- Recall   : 0.0000  
+- F1-score : 0.0000  
+- Number of samples in slice: 11040 (8574 FP + 2466 FN)
 
-3. **Risks of Silent Failure:**
+Observatie:
+1. False positives occur in gebieden met ongebruikelijke patronen.  
+2. False negatives komen vaak voor bij low-confidence tiles (tiles waarop het model weinig vertrouwen heeft).  
+3. De geselecteerde slice presteert slechter dan de globale metrics (precision/recall/f1=0).  
+4. Alleen globale metrics monitoren is gevaarlijk in klinische context, omdat grote fouten op subgroepen verborgen blijven.
+
+Based on the visualization and analysis of errors:  
+- False positives may occur in regions with unusual or unexpected patterns.  
+- False negatives predominantly happen on low-confidence tiles, where the model's predictions are less certain.  
+
+**2. Definition of the slice**  
+- **Slice:** Low-confidence tiles (tiles for which the model’s predicted probability was close to the decision threshold, i.e., uncertain predictions).  
+- **Isolation method:** Tiles were filtered based on their prediction probability (`y_prob`) to select those with low confidence.  
+- **Performance comparison:**  
+  - Global metrics: Accuracy = 0.6631, Precision = 0.6185, Recall = 0.8493, F1-score = 0.7158  
+  - Slice metrics: Accuracy = 0.8839, Precision = 0.0000, Recall = 0.0000, F1-score = 0.0000  
+  The slice exhibits drastically worse performance in precision and recall, showing the model fails completely on these low-confidence tiles.  
+
+**3. Risks of monitoring only global metrics**  
+Monitoring only global metrics such as F1-score is dangerous in deployment because:  
+- Global averages can hide catastrophic failures on specific subgroups or slices.  
+- In a clinical context, low-confidence or misclassified tiles could correspond to carcinoma tissue, leading to missed diagnoses.  
+- Without slice-level monitoring, these high-risk failure modes would go undetected, potentially compromising patient safety.
 
 ---
 
