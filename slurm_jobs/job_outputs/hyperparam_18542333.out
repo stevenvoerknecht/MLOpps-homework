@@ -1,0 +1,2 @@
+Totale combinaties: 12
+Running combination: lr=0.001, batch_size=16, hidden_units=[64, 32]

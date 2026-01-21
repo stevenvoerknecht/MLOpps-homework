@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2378/MLOpps-homework/scripts/evaluate.py", line 23, in <module>
+    _, test_loader = get_dataloaders(config)  # Verwijder return_test argument
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/data/loader.py", line 53, in get_dataloaders
+    train_loader = create_loader("train", use_sampler=True)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/data/loader.py", line 29, in create_loader
+    ds = PCAMDataset(x_p, y_p, transform=transforms.ToTensor())
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/data/pcam.py", line 20, in __init__
+    self.x_data = h5py.File(x_path, "r")["x"]
+  File "/gpfs/home3/scur2378/MLOpps-homework/venv/lib64/python3.9/site-packages/h5py/_hl/files.py", line 564, in __init__
+    fid = make_fid(name, mode, userblock_size, fapl, fcpl, swmr=swmr)
+  File "/gpfs/home3/scur2378/MLOpps-homework/venv/lib64/python3.9/site-packages/h5py/_hl/files.py", line 238, in make_fid
+    fid = h5f.open(name, flags, fapl=fapl)
+  File "h5py/_objects.pyx", line 56, in h5py._objects.with_phil.wrapper
+  File "h5py/_objects.pyx", line 57, in h5py._objects.with_phil.wrapper
+  File "h5py/h5f.pyx", line 102, in h5py.h5f.open
+FileNotFoundError: [Errno 2] Unable to synchronously open file (unable to open file: name = 'data/surfdrive/camelyonpatch_level_2_split_train_x.h5', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0)

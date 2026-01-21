@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2378/MLOpps-homework/scripts/hyperparam_search.py", line 50, in <module>
+    trainer = Trainer(model, optimizer, config, device)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/solver/trainer.py", line 25, in __init__
+    self.tracker = MLflowTracker(config)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/tracking/mlflow_tracker.py", line 17, in __init__
+    self.run = mlflow.start_run()
+  File "/gpfs/home3/scur2378/MLOpps-homework/venv/lib64/python3.9/site-packages/mlflow/tracking/fluent.py", line 379, in start_run
+    raise Exception(
+Exception: Run with UUID d7eddf191be64a4db9c508dca3979110 is already active. To start a new run, first end the current run with mlflow.end_run(). To start a nested run, call start_run with nested=True

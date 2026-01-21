@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2378/MLOpps-homework/experiments/train.py", line 59, in <module>
+    main(args)
+  File "/gpfs/home3/scur2378/MLOpps-homework/experiments/train.py", line 50, in main
+    trainer.fit(train_loader, val_loader)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/solver/trainer.py", line 123, in fit
+    self.tracker.log_metrics(
+TypeError: log_metrics() got an unexpected keyword argument 'epoch'

@@ -1,0 +1,16 @@
+PROJECT_ROOT is: /gpfs/home3/scur2378/MLOpps-homework
+Run has started
+Experiment pcam_mlp_champion has started
+Configuration has loaded and seeds have been set
+Dataloaders are ready
+Epoch 1/5
+Train loss: 0.6448, Val loss: 0.6412
+Epoch 2/5
+Train loss: 0.6066, Val loss: 0.6152
+Epoch 3/5
+Train loss: 0.5852, Val loss: 0.6140
+Epoch 4/5
+Train loss: 0.5713, Val loss: 0.7666
+Epoch 5/5
+Train loss: 0.5609, Val loss: 0.6166
+Full run completed

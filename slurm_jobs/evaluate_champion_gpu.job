@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --partition=gpu_course
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=16G
+#SBATCH --gres=gpu:1
+#SBATCH --time=00:30:00
+#SBATCH --output=slurm_jobs/job_outputs/evaluate_champion_%j.out
+#SBATCH --error=slurm_jobs/job_outputs/evaluate_champion_%j.err
+
+set -e
+
+PROJECT_ROOT="$SLURM_SUBMIT_DIR"
+export PROJECT_ROOT
+
+module load 2025
+module load Python/3.13.1-GCCcore-14.2.0
+
+source "$PROJECT_ROOT/venv/bin/activate"
+export PYTHONPATH=$PROJECT_ROOT/src
+
+python scripts/evaluate_champion.py

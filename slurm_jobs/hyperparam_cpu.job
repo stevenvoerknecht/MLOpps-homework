@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --partition=gpu_course        
+#SBATCH --nodes=1                     
+#SBATCH --ntasks=1                   
+#SBATCH --cpus-per-task=2             
+#SBATCH --mem=16G                      
+#SBATCH --gres=gpu:1                  
+#SBATCH --time=02:00:00               
+#SBATCH --output=slurm_jobs/job_outputs/hyperparam_%j.out
+#SBATCH --error=slurm_jobs/job_outputs/hyperparam_%j.err
+
+set -e
+
+# Project root
+PROJECT_ROOT="$SLURM_SUBMIT_DIR"
+export PROJECT_ROOT
+
+# Modules
+module load 2025
+module load Python/3.13.1-GCCcore-14.2.0
+
+# Activate virtual environment
+source "$PROJECT_ROOT/venv/bin/activate"
+
+# Set PYTHONPATH
+export PYTHONPATH=$PROJECT_ROOT/src
+
+# Run hyperparameter search
+python scripts/hyperparam_search.py

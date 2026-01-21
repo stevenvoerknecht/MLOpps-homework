@@ -17,9 +17,11 @@ def main(args):
     config = load_config(args.config)
 
     # setting the correct datapath
-    project_root = Path(os.environ["PROJECT_ROOT"])
-    data_path = project_root / config["data"]["data_path"]
-    config["data"]["data_path"] = str(data_path)
+    # Pas het datapad aan voor jouw omgeving
+    #dit is sas database pad en niet universeel
+    config["data"]["data_path"] = "/home/scur2378/data/mlops_2026_pcam_data/surfdrive"
+
+
 
     name = config["experiment_name"]
     seed = config["seed"]

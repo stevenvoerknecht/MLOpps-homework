@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2378/MLOpps-homework/scripts/hyperparam_search.py", line 48, in <module>
+    trainer.fit(train_loader, val_loader)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/solver/trainer.py", line 154, in fit
+    val_loss, val_acc, val_f1 = self.validate(val_loader, epoch)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/solver/trainer.py", line 116, in validate
+    self.save_checkpoint(epoch_idx, val_loss)
+  File "/gpfs/home3/scur2378/MLOpps-homework/src/ml_core/solver/trainer.py", line 135, in save_checkpoint
+    self.tracker.log_artifact(checkpoint_path)
+AttributeError: 'MLflowTracker' object has no attribute 'log_artifact'

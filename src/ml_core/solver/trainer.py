@@ -1,10 +1,13 @@
 from pathlib import Path
 from typing import Any, Dict, Tuple
+import csv
 
 import torch
 import torch.nn as nn
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, fbeta_score, roc_auc_score, precision_recall_curve, auc
 from torch.utils.data import DataLoader
+
+from ml_core.tracking.mlflow_tracker import MLflowTracker
 
 
 class Trainer:
@@ -13,93 +16,129 @@ class Trainer:
         model: nn.Module,
         optimizer: torch.optim.Optimizer,
         config: Dict[str, Any],
-        device: str,
+        device: str = None,   # als je None geeft, kiest hij automatisch
     ):
-        self.model = model.to(device)
+        # Device automatisch detecteren
+        self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = model.to(self.device)
         self.optimizer = optimizer
         self.config = config
-        self.device = device
-
         self.criterion = nn.CrossEntropyLoss()
+        self.tracker = MLflowTracker(config)
+        self.best_val_loss = float("inf")
 
-        # TODO: Initialize ExperimentTracker
-        self.tracker = None
+        # CSV logging
+        self.csv_path = Path("experiments/results/metrics.csv")
+        self.csv_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.csv_path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                "epoch", "train_loss", "train_acc", "train_f1",
+                "val_loss", "val_acc", "val_f1", "val_f2", "val_roc_auc", "val_pr_auc"
+            ])
 
-        # TODO: Initialize metric calculation (like accuracy/f1-score) if needed
+    def log_csv(self, epoch, train_loss, train_acc, train_f1,
+                val_loss, val_acc, val_f1, val_f2, val_roc_auc, val_pr_auc):
+        with open(self.csv_path, "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                epoch+1, train_loss, train_acc, train_f1,
+                val_loss, val_acc, val_f1, val_f2, val_roc_auc, val_pr_auc
+            ])
 
-    def train_epoch(
-        self, dataloader: DataLoader, epoch_idx: int
-    ) -> Tuple[float, float, float]:
+    def train_epoch(self, dataloader: DataLoader, epoch_idx: int) -> Tuple[float, float, float]:
         self.model.train()
-        epoch_train_loss = 0
-        predictions = []
-        targets = []
+        epoch_loss = 0
+        predictions, targets = [], []
 
-        # 1. Iterate over dataloader
         for images, labels in dataloader:
-            # 2. Move data to device
             images, labels = images.to(self.device), labels.to(self.device)
-
-            # 3. Forward pass, Calculate Loss
             self.optimizer.zero_grad()
             outputs = self.model(images)
             loss = self.criterion(outputs, labels)
-
-            # 4. Backward pass, Optimizer step
             loss.backward()
             self.optimizer.step()
 
-            # 5. Track metrics (Loss, Accuracy, F1)
-            epoch_train_loss += loss.item()
-            prediction = torch.argmax(outputs, dim=1)
-
-            # moving tensors to cpu for sklearn
-            predictions.append(prediction.cpu())
+            epoch_loss += loss.item()
+            predictions.append(torch.argmax(outputs, dim=1).cpu())
             targets.append(labels.cpu())
 
-        # concatenating tensors from different batches to one tensor
         predictions = torch.cat(predictions)
         targets = torch.cat(targets)
 
-        # calculating and returning loss, accuracy and f1
-        train_loss = epoch_train_loss / len(dataloader)
+        train_loss = epoch_loss / len(dataloader)
         train_acc = (predictions == targets).float().mean().item()
         train_f1 = f1_score(targets, predictions, average="binary")
-        return (train_loss, train_acc, train_f1)
 
-    def validate(
-        self, dataloader: DataLoader, epoch_idx: int
-    ) -> Tuple[float, float, float]:
+        # Log metrics naar MLflow
+        self.tracker.log_metrics(
+            {"train_loss": train_loss, "train_acc": train_acc, "train_f1": train_f1},
+            step=epoch_idx,
+        )
+
+        return train_loss, train_acc, train_f1
+
+    def validate(self, dataloader: DataLoader, epoch_idx: int) -> Tuple[float, float, float]:
         self.model.eval()
-        epoch_val_loss = 0
-        predictions = []
-        targets = []
+        val_loss_total = 0
+        predictions, targets = [], []
 
         with torch.no_grad():
             for images, labels in dataloader:
                 images, labels = images.to(self.device), labels.to(self.device)
                 outputs = self.model(images)
                 loss = self.criterion(outputs, labels)
-
-                epoch_val_loss += loss.item()
-                prediction = torch.argmax(outputs, dim=1)
-
-                # moving tensors to cpu for sklearn
-                predictions.append(prediction.cpu())
+                val_loss_total += loss.item()
+                predictions.append(torch.argmax(outputs, dim=1).cpu())
                 targets.append(labels.cpu())
 
-        # concatenating tensors from different batches to one tensor
         predictions = torch.cat(predictions)
         targets = torch.cat(targets)
 
-        # calculating and returning loss, accuracy and f1
-        val_loss = epoch_val_loss / len(dataloader)
+        val_loss = val_loss_total / len(dataloader)
         val_acc = (predictions == targets).float().mean().item()
         val_f1 = f1_score(targets, predictions, average="binary")
-        return (val_loss, val_acc, val_f1)
+        val_f2 = fbeta_score(targets, predictions, beta=2)
+
+        # ROC-AUC & PR-AUC
+        all_probs = []
+        with torch.no_grad():
+            for images, _ in dataloader:
+                images = images.to(self.device)
+                outputs = self.model(images)
+                probs = torch.softmax(outputs, dim=1)[:, 1]
+                all_probs.append(probs.cpu())
+        all_probs = torch.cat(all_probs)
+
+        val_roc_auc = roc_auc_score(targets, all_probs)
+        precision, recall, _ = precision_recall_curve(targets, all_probs)
+        val_pr_auc = auc(recall, precision)
+
+        # Log metrics naar MLflow
+        self.tracker.log_metrics(
+            {
+                "val_loss": val_loss,
+                "val_acc": val_acc,
+                "val_f1": val_f1,
+                "val_f2": val_f2,
+                "val_roc_auc": val_roc_auc,
+                "val_pr_auc": val_pr_auc
+            },
+            step=epoch_idx,
+        )
+
+        # CSV logging
+        self.log_csv(epoch_idx, *self.train_epoch(dataloader, epoch_idx), 
+                     val_loss, val_acc, val_f1, val_f2, val_roc_auc, val_pr_auc)
+
+        # Save best checkpoint
+        if val_loss < self.best_val_loss:
+            self.best_val_loss = val_loss
+            self.save_checkpoint(epoch_idx, val_loss)
+
+        return val_loss, val_acc, val_f1
 
     def save_checkpoint(self, epoch: int, val_loss: float) -> None:
-        # Save model state, optimizer state, and config
         checkpoint = {
             "epoch": epoch,
             "model_state": self.model.state_dict(),
@@ -107,35 +146,39 @@ class Trainer:
             "val_loss": val_loss,
             "config": self.config,
         }
-
-        # Saving the checkpoint
-        save_dir = self.config["training"]["save_dir"]
-        save_dir = Path(save_dir)
+        save_dir = Path(self.config["training"]["save_dir"])
         save_dir.mkdir(parents=True, exist_ok=True)
-        checkpoint_path = save_dir / f"checkpoint_epoch_{epoch}.pt"
+        checkpoint_path = save_dir / "best_checkpoint.pt"
         torch.save(checkpoint, checkpoint_path)
+        self.tracker.log_artifact(checkpoint_path)
 
     def fit(
         self, train_loader: DataLoader, val_loader: DataLoader, start_epoch=0
     ) -> None:
         epochs = self.config["training"]["epochs"]
 
-        print(f"Starting training for {epochs} epochs...")
+        # Log hyperparameters naar MLflow
+        self.tracker.log_metrics(
+            metrics={
+                "learning_rate": self.config["training"]["learning_rate"],
+                "batch_size": self.config["data"]["batch_size"],
+                "epochs": epochs
+            },
+            step=0
+        )
 
+<<<<<<< HEAD
         for epoch in range(start_epoch, epochs):
             # Call train_epoch and validate
             print(f"Epoch {epoch+1} has started")
             train_metrics = self.train_epoch(train_loader, epoch)
             val_metrics = self.validate(val_loader, epoch)
+=======
+        for epoch in range(epochs):
+            print(f"Epoch {epoch+1}/{epochs}")
+>>>>>>> feature/Q5
 
-            # TODO: Log metrics to tracker
+            train_loss, train_acc, train_f1 = self.train_epoch(train_loader, epoch)
+            val_loss, val_acc, val_f1 = self.validate(val_loader, epoch)
 
-            # Save checkpoints
-            self.save_checkpoint(epoch, val_metrics[0])
-            print(f"Epoch {epoch+1} has ended and saved")
-            print(
-                f"Training loss is {train_metrics[0]} and Validation loss is {val_metrics[0]}"
-            )
-
-
-# Remember to handle the trackers properly
+            print(f"Train loss: {train_loss:.4f}, Val loss: {val_loss:.4f}")
