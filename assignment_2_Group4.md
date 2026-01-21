@@ -112,18 +112,49 @@
 
 ## Question 8: Benchmarking Infrastructure
 1. **Throughput Logic:**
+Ik heb apart gemeten. Hierbij meet je precies hoe lang de CPU en GPU bezig zijn. Ook kan je als er problemen zijn amkkelijker zien waar het model vastloopt. Bij meting tijdens training wordt wel het hele process meegenomen inclusief het ophalen van de data. Het ophalen van de data en de validation kan interferen met de throughput measurement.
 
+start_time = time.time()
+iterations = 500
+
+for _ in range(iterations):
+    _ = model(dummy_input)
+    
+    # Cruciaal voor GPU: wacht tot de berekening echt klaar is 
+    # voordat de loop doorgaat naar de volgende iteratie of stopt.
+    if device.type == 'cuda': 
+        torch.cuda.synchronize()
+
+end_time = time.time()
+
+total_time = end_time - start_time
+throughput = iterations / total_time
+
+Ik denk dat float16 of float32 de precission zeker affect. Met float 32 worden er veel meer bits tegelijk naar de GPU verstuurd wat zeker invleod zal hebben op de precission.
+
+Als het heel druk is op snellius kan je een aantal nodes moeten delen. Dit zal zeker effect hebben op je throughput.
 2. **Throughput Table (Batch Size 1):**
 
 | Partition | Node Type | Throughput (img/s) | Job ID |
 | :--- | :--- | :--- | :--- |
-| `thin_course` | CPU Only | | |
-| `gpu_course` | GPU ([Type]) | | |
+| `thin_course` | CPU Only |9738.25 img/s |18476510|
+| `gpu_course` | GPU ([Type]) |6804.23 img/s |18476737|
 
 3. **Scaling Analysis:**
+Batch Size	Throughput (img/s)	Scaling Factor 
+8	        45.385,53	        1.0x
+16	        88.488,59	        1.95x
+32	        127.043,58	        2.80x
+128	        229.524,22	        5.06x
+256	        254.612,54	        5.61x
+512	        253.402,96	        5.58x
 
+We zien dat het van 8 tot 32 heel erg stijgt en dat het vanaf 128 tot 256 weer afzwakt en van 256 tot 512 wee lager wordt. Het plateau zot dus rond 256.
+
+GPU Naam: NVIDIA A100-SXM4-40GB MIG 1g.5gb
+Max VRAM: 209.19 M
 4. **Bottleneck Identification:**
-
+We hebben gezien dat de GPU een throughput van 253.402 img/s heeft. Dit is extreem snel. Ik denk dat de CPU dit niet evensnel kan doen dus dat de CPU prerpossesing het langzaamst is.
 ---
 
 ## Question 9: Documentation & README
