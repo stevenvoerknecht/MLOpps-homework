@@ -81,7 +81,7 @@ criterion = nn.BCELoss()
 
 loss_list = []
 
-for epoch in range(5):
+for _ in range(epochs):
     for x, y in train_loader:
         # shape x: [4,2]
         optimizer.zero_grad()
