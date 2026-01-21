@@ -1,0 +1,9 @@
+Using device: cuda
+
+=== TEST SET RESULTS (CHAMPION) ===
+Accuracy : 0.6631
+Precision: 0.6185
+Recall   : 0.8493
+F1-score : 0.7158
+
+Saved y_true, y_pred, y_prob for next steps.

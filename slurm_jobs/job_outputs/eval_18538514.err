@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2378/MLOpps-homework/scripts/evaluate.py", line 20, in <module>
+    _, _, test_loader = get_dataloaders(config, return_test=True)
+TypeError: get_dataloaders() got an unexpected keyword argument 'return_test'

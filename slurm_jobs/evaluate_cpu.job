@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --partition=thin_course
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=00:15:00
+#SBATCH --output=slurm_jobs/job_outputs/eval_%j.out
+#SBATCH --error=slurm_jobs/job_outputs/eval_%j.err
+
+set -e
+
+PROJECT_ROOT="$SLURM_SUBMIT_DIR"
+export PROJECT_ROOT
+
+module load 2025
+module load Python/3.13.1-GCCcore-14.2.0
+
+source "$PROJECT_ROOT/venv/bin/activate"
+export PYTHONPATH=$PROJECT_ROOT/src
+
+python scripts/evaluate.py

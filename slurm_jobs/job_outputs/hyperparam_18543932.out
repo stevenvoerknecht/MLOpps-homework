@@ -1,0 +1,106 @@
+Using device: cuda
+Totale combinaties: 8
+Running combination: lr=0.001, batch_size=16, hidden_units=[64, 32]
+Epoch 1/5
+Train loss: 0.6889, Val loss: 0.6933
+Epoch 2/5
+Train loss: 0.6871, Val loss: 0.6932
+Epoch 3/5
+Train loss: 0.6862, Val loss: 0.6934
+Epoch 4/5
+Train loss: 0.6864, Val loss: 0.6933
+Epoch 5/5
+Train loss: 0.6860, Val loss: 0.6932
+Combination finished.
+
+Running combination: lr=0.001, batch_size=16, hidden_units=[128, 64]
+Epoch 1/5
+Train loss: 0.6900, Val loss: 0.6932
+Epoch 2/5
+Train loss: 0.6864, Val loss: 0.6933
+Epoch 3/5
+Train loss: 0.6863, Val loss: 0.6932
+Epoch 4/5
+Train loss: 0.6861, Val loss: 0.6931
+Epoch 5/5
+Train loss: 0.6864, Val loss: 0.6932
+Combination finished.
+
+Running combination: lr=0.001, batch_size=32, hidden_units=[64, 32]
+Epoch 1/5
+Train loss: 0.6890, Val loss: 0.6932
+Epoch 2/5
+Train loss: 0.6875, Val loss: 0.6933
+Epoch 3/5
+Train loss: 0.6861, Val loss: 0.6931
+Epoch 4/5
+Train loss: 0.6861, Val loss: 0.6932
+Epoch 5/5
+Train loss: 0.6857, Val loss: 0.6933
+Combination finished.
+
+Running combination: lr=0.001, batch_size=32, hidden_units=[128, 64]
+Epoch 1/5
+Train loss: 0.6904, Val loss: 0.6934
+Epoch 2/5
+Train loss: 0.6863, Val loss: 0.6933
+Epoch 3/5
+Train loss: 0.6862, Val loss: 0.6932
+Epoch 4/5
+Train loss: 0.6861, Val loss: 0.6933
+Epoch 5/5
+Train loss: 0.6861, Val loss: 0.6933
+Combination finished.
+
+Running combination: lr=0.0005, batch_size=16, hidden_units=[64, 32]
+Epoch 1/5
+Train loss: 0.6873, Val loss: 0.6931
+Epoch 2/5
+Train loss: 0.6864, Val loss: 0.6932
+Epoch 3/5
+Train loss: 0.6863, Val loss: 0.6932
+Epoch 4/5
+Train loss: 0.6863, Val loss: 0.6932
+Epoch 5/5
+Train loss: 0.6862, Val loss: 0.6932
+Combination finished.
+
+Running combination: lr=0.0005, batch_size=16, hidden_units=[128, 64]
+Epoch 1/5
+Train loss: 0.6881, Val loss: 0.6933
+Epoch 2/5
+Train loss: 0.6859, Val loss: 0.6931
+Epoch 3/5
+Train loss: 0.6863, Val loss: 0.6931
+Epoch 4/5
+Train loss: 0.6861, Val loss: 0.6931
+Epoch 5/5
+Train loss: 0.6855, Val loss: 0.6931
+Combination finished.
+
+Running combination: lr=0.0005, batch_size=32, hidden_units=[64, 32]
+Epoch 1/5
+Train loss: 0.6888, Val loss: 0.6932
+Epoch 2/5
+Train loss: 0.6865, Val loss: 0.6932
+Epoch 3/5
+Train loss: 0.6859, Val loss: 0.6932
+Epoch 4/5
+Train loss: 0.6872, Val loss: 0.6932
+Epoch 5/5
+Train loss: 0.6864, Val loss: 0.6934
+Combination finished.
+
+Running combination: lr=0.0005, batch_size=32, hidden_units=[128, 64]
+Epoch 1/5
+Train loss: 0.6886, Val loss: 0.6931
+Epoch 2/5
+Train loss: 0.6863, Val loss: 0.6932
+Epoch 3/5
+Train loss: 0.6863, Val loss: 0.6932
+Epoch 4/5
+Train loss: 0.6865, Val loss: 0.6931
+Epoch 5/5
+Train loss: 0.6860, Val loss: 0.6931
+Combination finished.
+

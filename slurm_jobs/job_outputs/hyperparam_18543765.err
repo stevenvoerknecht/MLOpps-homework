@@ -1,0 +1,2 @@
+/var/spool/slurm/slurmd/job18543765/slurm_script: line 26: 4027087 Killed                  python "$PROJECT_ROOT/scripts/hyperparam_search.py"
+[2026-01-21T18:23:23.901] error: Detected 1 oom_kill event in StepId=18543765.batch. Some of the step tasks have been OOM Killed.

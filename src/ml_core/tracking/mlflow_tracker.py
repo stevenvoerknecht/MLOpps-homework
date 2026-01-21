@@ -11,7 +11,7 @@ class MLflowTracker:
         self.config = config
 
         # lokaal, file-based (Snellius-proof)
-        mlflow.set_tracking_uri("file:./mlruns")
+        mlflow.set_tracking_uri("file:/scratch-shared/scur2378/mlruns")
         mlflow.set_experiment("pcam_assignment_2")
 
         self.run = mlflow.start_run()

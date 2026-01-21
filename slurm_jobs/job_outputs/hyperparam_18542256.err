@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2378/MLOpps-homework/scripts/hyperparam_search.py", line 47, in <module>
+    tracker.start_experiment(experiment_name="pcam_assignment_2")
+AttributeError: 'MLflowTracker' object has no attribute 'start_experiment'
