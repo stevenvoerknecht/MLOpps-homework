@@ -59,11 +59,11 @@ Checkpoints are save in experiments/results and the best checkpoint can be found
 
 ### Inference
 You can run an inference for a single sample using inference.py.  
-Run the following command from the folder MLOps_2026 to run inference.py:  
+Run the following command from the folder MLOps_2026 to run inference.py after running source venv/bin/activate:  
 ```python
 python experiments/inference.py \
   --config experiments/configs/train_config.yaml \
-  --checkpoint experiments/checkpoint_epoch_7.pt \
+  --checkpoint experiments/best_checkpoint.pt \
   --h5_x data/surfdrive/camelyonpatch_level_2_split_test_x.h5 \
   --index 0
 ``` 

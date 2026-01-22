@@ -1,27 +1,33 @@
-import torch
 from pathlib import Path
-from sklearn.metrics import f1_score, fbeta_score, roc_auc_score, precision_recall_curve, auc
 
-from ml_core.models import MLP
+import torch
 from ml_core.data import get_dataloaders
-from ml_core.utils import load_config
+from ml_core.models import MLP
 from ml_core.tracking.mlflow_tracker import MLflowTracker
+from ml_core.utils import load_config
+from sklearn.metrics import (
+    auc,
+    f1_score,
+    fbeta_score,
+    precision_recall_curve,
+    roc_auc_score,
+)
 
-# === Config & device (EXPLICIET CPU) ===
+# Config & device (explicitly CPU)
 config = load_config("experiments/configs/train_config.yaml")
 device = "cpu"  # thin_course node
 
-# === Dataloaders ===
+# Dataloaders
 _, test_loader = get_dataloaders(config)  # geen return_test argument
 
-# === Model + checkpoint ===
+# Model + checkpoint
 model = MLP(**config["model"]).to(device)
-checkpoint_path = Path("experiments/results/best_checkpoint.pt")  # zoals opgegeven in config
+checkpoint_path = Path("experiments/results/best_checkpoint.pt")
 checkpoint = torch.load(checkpoint_path, map_location=device)
 model.load_state_dict(checkpoint["model_state"])
 model.eval()
 
-# === Evaluatie ===
+# Evaluation
 all_preds, all_probs, all_labels = [], [], []
 
 with torch.no_grad():
@@ -52,12 +58,7 @@ tracker = MLflowTracker(config)
 
 # Log de test metrics
 tracker.log_metrics(
-    {
-        "test_f1": f1,
-        "test_f2": f2,
-        "test_roc_auc": roc_auc,
-        "test_pr_auc": pr_auc
-    }
+    {"test_f1": f1, "test_f2": f2, "test_roc_auc": roc_auc, "test_pr_auc": pr_auc}
 )
 
 print("Test set evaluation")

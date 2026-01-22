@@ -1,13 +1,14 @@
-# evaluate_champion.py
-import torch
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import torch
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
-# --- Config ---
+# Config
 RESULTS_DIR = Path("experiments/results")
 CSV_FILE = RESULTS_DIR / "metrics.csv"
+
 
 def main():
     # 1. Device
@@ -20,12 +21,12 @@ def main():
     y_prob_path = RESULTS_DIR / "y_prob.npy"
 
     if not (y_true_path.exists() and y_pred_path.exists() and y_prob_path.exists()):
-        print("❌ Error: one of the .npy result files does not exist.")
+        print("Error: one of the .npy result files does not exist.")
         return
 
     y_true = np.load(y_true_path)
     y_pred = np.load(y_pred_path)
-    y_prob = np.load(y_prob_path)
+    # y_prob = np.load(y_prob_path)
 
     # 3. Compute metrics
     acc = accuracy_score(y_true, y_pred)
@@ -40,15 +41,13 @@ def main():
     print(f"F1-score : {f1:.4f}")
 
     # 4. Save to CSV
-    df = pd.DataFrame({
-        "accuracy": [acc],
-        "precision": [prec],
-        "recall": [rec],
-        "f1_score": [f1]
-    })
+    df = pd.DataFrame(
+        {"accuracy": [acc], "precision": [prec], "recall": [rec], "f1_score": [f1]}
+    )
 
     df.to_csv(CSV_FILE, index=False)
-    print(f"\n✅ Metrics saved to {CSV_FILE}")
+    print(f"\n Metrics saved to {CSV_FILE}")
+
 
 if __name__ == "__main__":
     main()

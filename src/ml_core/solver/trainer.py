@@ -1,10 +1,16 @@
+import csv
 from pathlib import Path
 from typing import Any, Dict, Tuple
-import csv
 
 import torch
 import torch.nn as nn
-from sklearn.metrics import f1_score, fbeta_score, roc_auc_score, precision_recall_curve, auc
+from sklearn.metrics import (
+    auc,
+    f1_score,
+    fbeta_score,
+    precision_recall_curve,
+    roc_auc_score,
+)
 from torch.utils.data import DataLoader
 
 from ml_core.tracking.mlflow_tracker import MLflowTracker
@@ -16,10 +22,12 @@ class Trainer:
         model: nn.Module,
         optimizer: torch.optim.Optimizer,
         config: Dict[str, Any],
-        device: str = None,   # als je None geeft, kiest hij automatisch
+        device: str = None,  # als je None geeft, kiest hij automatisch
     ):
         # Device automatisch detecteren
-        self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = (
+            device if device else ("cuda" if torch.cuda.is_available() else "cpu")
+        )
         self.model = model.to(self.device)
         self.optimizer = optimizer
         self.config = config
@@ -32,21 +40,54 @@ class Trainer:
         self.csv_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.csv_path, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow([
-                "epoch", "train_loss", "train_acc", "train_f1",
-                "val_loss", "val_acc", "val_f1", "val_f2", "val_roc_auc", "val_pr_auc"
-            ])
+            writer.writerow(
+                [
+                    "epoch",
+                    "train_loss",
+                    "train_acc",
+                    "train_f1",
+                    "val_loss",
+                    "val_acc",
+                    "val_f1",
+                    "val_f2",
+                    "val_roc_auc",
+                    "val_pr_auc",
+                ]
+            )
 
-    def log_csv(self, epoch, train_loss, train_acc, train_f1,
-                val_loss, val_acc, val_f1, val_f2, val_roc_auc, val_pr_auc):
+    def log_csv(
+        self,
+        epoch,
+        train_loss,
+        train_acc,
+        train_f1,
+        val_loss,
+        val_acc,
+        val_f1,
+        val_f2,
+        val_roc_auc,
+        val_pr_auc,
+    ):
         with open(self.csv_path, "a", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow([
-                epoch+1, train_loss, train_acc, train_f1,
-                val_loss, val_acc, val_f1, val_f2, val_roc_auc, val_pr_auc
-            ])
+            writer.writerow(
+                [
+                    epoch + 1,
+                    train_loss,
+                    train_acc,
+                    train_f1,
+                    val_loss,
+                    val_acc,
+                    val_f1,
+                    val_f2,
+                    val_roc_auc,
+                    val_pr_auc,
+                ]
+            )
 
-    def train_epoch(self, dataloader: DataLoader, epoch_idx: int) -> Tuple[float, float, float]:
+    def train_epoch(
+        self, dataloader: DataLoader, epoch_idx: int
+    ) -> Tuple[float, float, float]:
         self.model.train()
         epoch_loss = 0
         predictions, targets = [], []
@@ -78,7 +119,9 @@ class Trainer:
 
         return train_loss, train_acc, train_f1
 
-    def validate(self, dataloader: DataLoader, epoch_idx: int) -> Tuple[float, float, float]:
+    def validate(
+        self, dataloader: DataLoader, epoch_idx: int
+    ) -> Tuple[float, float, float]:
         self.model.eval()
         val_loss_total = 0
         predictions, targets = [], []
@@ -122,14 +165,22 @@ class Trainer:
                 "val_f1": val_f1,
                 "val_f2": val_f2,
                 "val_roc_auc": val_roc_auc,
-                "val_pr_auc": val_pr_auc
+                "val_pr_auc": val_pr_auc,
             },
             step=epoch_idx,
         )
 
         # CSV logging
-        self.log_csv(epoch_idx, *self.train_epoch(dataloader, epoch_idx), 
-                     val_loss, val_acc, val_f1, val_f2, val_roc_auc, val_pr_auc)
+        self.log_csv(
+            epoch_idx,
+            *self.train_epoch(dataloader, epoch_idx),
+            val_loss,
+            val_acc,
+            val_f1,
+            val_f2,
+            val_roc_auc,
+            val_pr_auc,
+        )
 
         # Save best checkpoint
         if val_loss < self.best_val_loss:
@@ -162,21 +213,14 @@ class Trainer:
             metrics={
                 "learning_rate": self.config["training"]["learning_rate"],
                 "batch_size": self.config["data"]["batch_size"],
-                "epochs": epochs
+                "epochs": epochs,
             },
-            step=0
+            step=0,
         )
 
-<<<<<<< HEAD
-        for epoch in range(start_epoch, epochs):
+        for epoch in range(start_epoch, epochs + start_epoch):
             # Call train_epoch and validate
             print(f"Epoch {epoch+1} has started")
-            train_metrics = self.train_epoch(train_loader, epoch)
-            val_metrics = self.validate(val_loader, epoch)
-=======
-        for epoch in range(epochs):
-            print(f"Epoch {epoch+1}/{epochs}")
->>>>>>> feature/Q5
 
             train_loss, train_acc, train_f1 = self.train_epoch(train_loader, epoch)
             val_loss, val_acc, val_f1 = self.validate(val_loader, epoch)

@@ -3,7 +3,7 @@ seed: 42
 
 data:
   dataset_type: "pcam"
-  data_path: "/home/scur2378/data/mlops_2026_pcam_data/surfdrive"
+  data_path: "data/surfdrive"
   batch_size: 16
   num_workers: 2
 
@@ -14,17 +14,13 @@ model:
   dropout_rate: 0.2
 
 training:
-<<<<<<< HEAD
-  epochs: 8
-  learning_rate: 0.001
-=======
   epochs: 5
   learning_rate: 0.0005
->>>>>>> feature/Q5
   save_dir: "experiments/results"
 
 optimizer: "adam"
-  scheduler:
+
+scheduler:
     name: "reduce_lr_on_plateau"
     factor: 0.1
     patience: 2

@@ -1,16 +1,16 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.metrics import (
-    confusion_matrix,
     ConfusionMatrixDisplay,
-    roc_curve,
-    auc,
-    precision_recall_curve,
     accuracy_score,
+    auc,
+    confusion_matrix,
     f1_score,
+    precision_recall_curve,
+    roc_curve,
 )
 
-# --- Pad naar bestanden ---
+# Path to files
 results_dir = "experiments/results/"
 
 # Laad de resultaten van het model
@@ -18,9 +18,7 @@ y_true = np.load(f"{results_dir}y_true.npy")
 y_pred = np.load(f"{results_dir}y_pred.npy")
 y_prob = np.load(f"{results_dir}y_prob.npy")
 
-# -----------------------------
-# 1️⃣ Confusion Matrix
-# -----------------------------
+# Confusion matrix
 cm = confusion_matrix(y_true, y_pred)
 disp = ConfusionMatrixDisplay(cm)
 disp.plot(cmap=plt.cm.Blues)
@@ -28,15 +26,13 @@ plt.title("Confusion Matrix - Champion Model")
 plt.savefig(f"{results_dir}confusion_matrix.png")  # opslaan
 plt.close()
 
-# -----------------------------
-# 2️⃣ ROC Curve
-# -----------------------------
+# ROC curve
 fpr, tpr, _ = roc_curve(y_true, y_prob)
 roc_auc = auc(fpr, tpr)
 
 plt.figure()
 plt.plot(fpr, tpr, label=f"ROC curve (AUC = {roc_auc:.3f})")
-plt.plot([0,1], [0,1], "--", color="gray")
+plt.plot([0, 1], [0, 1], "--", color="gray")
 plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
 plt.title("ROC Curve - Champion Model")
@@ -44,9 +40,7 @@ plt.legend()
 plt.savefig(f"{results_dir}roc_curve.png")
 plt.close()
 
-# -----------------------------
-# 3️⃣ Precision-Recall Curve
-# -----------------------------
+# Precision-recall curve
 precision, recall, _ = precision_recall_curve(y_true, y_prob)
 pr_auc = auc(recall, precision)
 
@@ -59,9 +53,7 @@ plt.legend()
 plt.savefig(f"{results_dir}pr_curve.png")
 plt.close()
 
-# -----------------------------
-# 4️⃣ Threshold-analyse
-# -----------------------------
+# Threshold analysis
 thresholds = np.arange(0.0, 1.01, 0.05)
 threshold_results = []
 
@@ -73,8 +65,8 @@ for thresh in thresholds:
 
 threshold_results = np.array(threshold_results)
 plt.figure()
-plt.plot(threshold_results[:,0], threshold_results[:,1], label="Accuracy")
-plt.plot(threshold_results[:,0], threshold_results[:,2], label="F1-score")
+plt.plot(threshold_results[:, 0], threshold_results[:, 1], label="Accuracy")
+plt.plot(threshold_results[:, 0], threshold_results[:, 2], label="F1-score")
 plt.xlabel("Classification Threshold")
 plt.ylabel("Score")
 plt.title("Threshold Analysis - Champion Model")
@@ -83,7 +75,7 @@ plt.grid(True)
 plt.savefig(f"{results_dir}threshold_analysis.png")
 plt.close()
 
-# Zoek threshold die recall maximaliseert (minimaliseer false negatives)
+# Find threshold for maximizing recall
 recall_scores = []
 for thresh in thresholds:
     y_thresh_pred = (y_prob >= thresh).astype(int)
@@ -94,9 +86,7 @@ best_recall_idx = np.argmax(recall_scores)
 best_thresh = thresholds[best_recall_idx]
 print(f"Suggested threshold for max recall: {best_thresh:.2f}")
 
-# -----------------------------
-# 5️⃣ Baseline vergelijking
-# -----------------------------
+# Compare baseline
 majority_class = np.bincount(y_true).argmax()
 baseline_pred = np.full_like(y_true, majority_class)
 
