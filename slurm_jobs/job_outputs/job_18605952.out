@@ -1,0 +1,8 @@
+PROJECT_ROOT is: /gpfs/home3/scur2391/MLOps_2026
+Run has started
+Experiment pcam_mlp_champion has started
+Configuration has loaded and seeds have been set
+Dataloaders are ready
+Train samples: 157286
+Val samples:   32768
+Resuming training from epoch 3

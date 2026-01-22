@@ -1,0 +1,44 @@
+/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/utils.py:178: FutureWarning: The filesystem tracking backend (e.g., './mlruns') will be deprecated in February 2026. Consider transitioning to a database backend (e.g., 'sqlite:///mlflow.db') to take advantage of the latest MLflow features. See https://github.com/mlflow/mlflow/issues/18534 for more details and migration guidance. For migrating existing data, https://github.com/mlflow/mlflow-export-import can be used.
+  return FileStore(store_uri, store_uri)
+Traceback (most recent call last):
+  File "/gpfs/home3/scur2391/MLOps_2026/experiments/train.py", line 73, in <module>
+    main(args)
+    ~~~~^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/experiments/train.py", line 57, in main
+    trainer = Trainer(model, optimizer, config, device)
+  File "/gpfs/home3/scur2391/MLOps_2026/src/ml_core/solver/trainer.py", line 35, in __init__
+    self.tracker = MLflowTracker(config)
+                   ~~~~~~~~~~~~~^^^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/src/ml_core/tracking/mlflow_tracker.py", line 15, in __init__
+    mlflow.set_experiment("pcam_assignment_2")
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/fluent.py", line 185, in set_experiment
+    client = TrackingServiceClient(_resolve_tracking_uri())
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/client.py", line 96, in __init__
+    self.store
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/client.py", line 100, in store
+    return utils._get_store(self.tracking_uri)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/utils.py", line 255, in _get_store
+    return _tracking_store_registry.get_store(store_uri, artifact_uri)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/registry.py", line 45, in get_store
+    return self._get_store_with_resolved_uri(resolved_store_uri, artifact_uri)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/registry.py", line 56, in _get_store_with_resolved_uri
+    return builder(store_uri=resolved_store_uri, artifact_uri=artifact_uri)
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/tracking/_tracking_service/utils.py", line 178, in _get_file_store
+    return FileStore(store_uri, store_uri)
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/store/tracking/file_store.py", line 237, in __init__
+    self._create_default_experiment()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/store/tracking/file_store.py", line 243, in _create_default_experiment
+    mkdir(self.root_directory)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/utils/file_utils.py", line 210, in mkdir
+    raise e
+  File "/gpfs/home3/scur2391/MLOps_2026/venv/lib/python3.13/site-packages/mlflow/utils/file_utils.py", line 207, in mkdir
+    os.makedirs(target, exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 227, in makedirs
+PermissionError: [Errno 13] Permission denied: '/scratch-shared/scur2378/mlruns'
