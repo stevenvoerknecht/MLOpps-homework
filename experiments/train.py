@@ -1,6 +1,4 @@
 import argparse
-import os
-from pathlib import Path
 
 import torch
 import torch.optim as optim
@@ -15,14 +13,6 @@ logger = setup_logger("Experiment_Runner")
 def main(args):
     # 1. Load Config & Set Seed
     config = load_config(args.config)
-
-    # setting the correct datapath
-    # Pas het datapad aan voor jouw omgeving
-    #dit is sas database pad en niet universeel
-    config["data"]["data_path"] = "/home/scur2378/data/mlops_2026_pcam_data/surfdrive"
-
-
-
     name = config["experiment_name"]
     seed = config["seed"]
     model_config = config["model"]
